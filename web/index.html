@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CDS-Hint · 临床辅助诊断提示原型</title>
+<style>
+  :root {
+    --ink: #1b2430;
+    --muted: #6b7684;
+    --line: #e3e8ef;
+    --bg: #f5f7fa;
+    --brand: #1f6feb;
+    --danger: #c0392b;
+    --warn: #b7791f;
+    --ok: #2f855a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    background: #fff; border-bottom: 1px solid var(--line); padding: 18px 24px;
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  header h1 { margin: 0; font-size: 20px; letter-spacing: .5px; }
+  header .tag {
+    font-size: 12px; color: var(--warn); border: 1px solid #f0d9b5;
+    background: #fff8ec; border-radius: 999px; padding: 2px 10px;
+  }
+  main {
+    max-width: 1120px; margin: 24px auto 64px; padding: 0 18px;
+    display: grid; grid-template-columns: 420px 1fr; gap: 22px; align-items: start;
+  }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 20px; box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+  }
+  .card h2 { margin: 0 0 14px; font-size: 15px; color: var(--muted); font-weight: 600; }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 5px; }
+  textarea, input, select {
+    width: 100%; border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 11px; font-size: 14px; font-family: inherit; color: var(--ink); background: #fcfdff;
+  }
+  textarea { min-height: 96px; resize: vertical; }
+  textarea:focus, input:focus, select:focus { outline: 2px solid #cfe0ff; border-color: var(--brand); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 8px; }
+  .chip {
+    border: 1px solid var(--line); background: #fff; border-radius: 999px;
+    padding: 5px 11px; font-size: 13px; cursor: pointer; color: var(--ink); transition: .15s;
+  }
+  .chip:hover { border-color: #a9c7ff; color: var(--brand); }
+  .chip.on { background: #eaf1ff; border-color: #b7d0ff; color: var(--brand); }
+  .actions { display: flex; gap: 10px; margin-top: 18px; }
+  button {
+    font: inherit; border-radius: 8px; padding: 10px 16px; cursor: pointer;
+    border: 1px solid var(--line); background: #fff; color: var(--ink);
+  }
+  button.primary { background: var(--brand); border-color: var(--brand); color: #fff; flex: 1; }
+  button.primary:disabled { opacity: .55; cursor: progress; }
+  .examples { margin-top: 14px; }
+  .examples button {
+    font-size: 12px; padding: 6px 10px; margin: 0 8px 8px 0; color: var(--muted);
+  }
+  .empty { color: var(--muted); font-size: 14px; padding: 44px 8px; text-align: center; }
+  .flag {
+    border: 1px solid #f2c9c4; background: #fff5f3; border-left: 4px solid var(--danger);
+    border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .flag .title { font-weight: 600; color: var(--danger); font-size: 14px; }
+  .flag .meta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .flag .act { font-size: 13px; margin-top: 6px; color: #66302a; }
+  .okline {
+    border: 1px solid #cbe6d5; background: #f2fbf6; color: var(--ok);
+    border-radius: 8px; padding: 10px 14px; font-size: 13px;
+  }
+  .dx { border-top: 1px dashed var(--line); padding: 14px 0; }
+  .dx:first-of-type { border-top: none; padding-top: 4px; }
+  .dx-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .dx-name { font-weight: 600; font-size: 15px; }
+  .badge { font-size: 12px; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .badge.crit { color: var(--danger); border-color: #f0c3bd; background: #fff4f2; }
+  .bar { height: 5px; background: #eef1f6; border-radius: 3px; margin: 9px 0 6px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: linear-gradient(90deg, #8fb8ff, var(--brand)); }
+  .kv { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .kv b { color: var(--ink); font-weight: 500; }
+  .exams { margin: 6px 0 0; padding-left: 18px; font-size: 13px; }
+  .exams li { margin: 2px 0; }
+  .examgroup { margin-bottom: 10px; }
+  .examgroup .lvl { font-size: 12px; color: var(--brand); font-weight: 600; }
+  .q { font-size: 13px; margin: 5px 0; padding-left: 18px; position: relative; }
+  .q::before { content: "?"; position: absolute; left: 0; color: var(--brand); font-weight: 700; }
+  .disclaimer { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 16px; padding-top: 12px; }
+  .narrative { background: #f7f9fc; border: 1px dashed var(--line); border-radius: 8px; padding: 12px 14px; font-size: 13px; margin-bottom: 14px; }
+  .sect { font-size: 12px; letter-spacing: .5px; color: var(--muted); margin: 18px 0 8px; font-weight: 600; }
+  .err { color: var(--danger); font-size: 13px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>CDS-Hint</h1>
+  <span class="tag">演示原型 · 非医疗器械</span>
+  <span style="font-size:12px;color:var(--muted)">输入结构化病例 → 红旗征筛查 → 鉴别诊断提示 → 建议检查与需补充信息</span>
+</header>
+
+<main>
+  <section class="card">
+    <h2>病例录入</h2>
+    <label for="complaint">主诉</label>
+    <textarea id="complaint" placeholder="例：突发胸骨后压榨样疼痛 2 小时，伴大汗、向左肩放射"></textarea>
+
+    <div class="row">
+      <div>
+        <label for="age">年龄</label>
+        <input id="age" type="number" min="0" max="120" placeholder="如 58" />
+      </div>
+      <div>
+        <label for="sex">性别</label>
+        <select id="sex">
+          <option value="">未填写</option>
+          <option value="male">男</option>
+          <option value="female">女</option>
+        </select>
+      </div>
+    </div>
+
+    <label>伴随症状 / 体征（可多选或自行补充）</label>
+    <div class="chips" id="chips"></div>
+    <input id="extra" placeholder="补充其他关键词，逗号分隔" style="margin-top:8px" />
+
+    <label>既往史 / 用药 / 手术史（逗号分隔）</label>
+    <input id="history" placeholder="如 高血压, 吸烟, 糖尿病" />
+
+    <label>生命体征</label>
+    <div class="row-3">
+      <input id="temp" type="number" step="0.1" placeholder="体温 ℃" />
+      <input id="hr" type="number" placeholder="心率 次/分" />
+      <input id="rr" type="number" placeholder="呼吸 次/分" />
+    </div>
+    <div class="row-3" style="margin-top:10px">
+      <input id="sbp" type="number" placeholder="收缩压 mmHg" />
+      <input id="dbp" type="number" placeholder="舒张压 mmHg" />
+      <input id="spo2" type="number" placeholder="血氧 %" />
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="run">生成提示</button>
+      <button id="reset">清空</button>
+    </div>
+
+    <div class="examples">
+      <div class="sect">示例病例</div>
+      <button data-ex="chest">胸痛 · 大汗</button>
+      <button data-ex="abdomen">右下腹痛 · 发热</button>
+      <button data-ex="head">雷击样头痛</button>
+      <button data-ex="fever">高热 · 尿频</button>
+      <button data-ex="dyspnea">夜间气促 · 水肿</button>
+    </div>
+  </section>
+
+  <section id="result">
+    <div class="card"><div class="empty">填写左侧病例后点击「生成提示」，结果会显示在这里。</div></div>
+  </section>
+</main>
+
+<script>
+const SYMPTOMS = ["压榨感","大汗","放射至左臂","呼吸困难","恶心","呕吐","发热","咳嗽","咳痰","烧心","反酸",
+  "右下腹压痛","转移性右下腹痛","腹泻","腰痛","血尿","尿频","尿急","颈抵抗","畏光","单侧搏动性","视觉先兆",
+  "紧箍感","端坐呼吸","下肢水肿","咯血","单侧下肢肿","意识改变","乏力","心悸"];
+
+const EXAMPLES = {
+  chest: {
+    complaint: "突发胸骨后压榨样疼痛 2 小时，伴大汗、向左肩放射",
+    age: 58, sex: "male", symptoms: ["压榨感","大汗","放射至左臂","恶心"],
+    history: ["高血压","吸烟"], vitals: { hr: 96, sbp: 145, dbp: 92, spo2: 96, temp: 36.6 }
+  },
+  abdomen: {
+    complaint: "脐周隐痛 1 天后转移至右下腹，伴恶心、发热",
+    age: 24, sex: "male", symptoms: ["转移性右下腹痛","右下腹压痛","恶心","发热"],
+    history: [], vitals: { temp: 38.1, hr: 98, sbp: 126, dbp: 78 }
+  },
+  head: {
+    complaint: "突发剧烈头痛，自述像被重击，伴呕吐、颈部僵硬",
+    age: 45, sex: "female", symptoms: ["颈抵抗","呕吐"],
+    history: ["高血压"], vitals: { sbp: 168, dbp: 100, hr: 88 }
+  },
+  fever: {
+    complaint: "发热 2 天，最高 39.2℃，伴尿频、尿急、尿痛",
+    age: 32, sex: "female", symptoms: ["发热","尿频","尿急","腰痛"],
+    history: [], vitals: { temp: 39.2, hr: 104, sbp: 112, dbp: 70 }
+  },
+  dyspnea: {
+    complaint: "活动后气促 1 周，夜间不能平卧，双下肢水肿",
+    age: 71, sex: "male", symptoms: ["端坐呼吸","下肢水肿","乏力"],
+    history: ["高血压","冠心病"], vitals: { hr: 102, rr: 24, sbp: 158, dbp: 94, spo2: 92 }
+  }
+};
+
+const chipsEl = document.getElementById("chips");
+const selected = new Set();
+SYMPTOMS.forEach((s) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.type = "button"; b.textContent = s;
+  b.onclick = () => {
+    if (selected.has(s)) { selected.delete(s); b.classList.remove("on"); }
+    else { selected.add(s); b.classList.add("on"); }
+  };
+  chipsEl.appendChild(b);
+});
+
+const el = (id) => document.getElementById(id);
+const num = (id) => (el(id).value === "" ? null : Number(el(id).value));
+const splitList = (v) => v.split(/[,，、\s]+/).map((x) => x.trim()).filter(Boolean);
+
+function collect() {
+  const symptoms = [...selected].concat(splitList(el("extra").value));
+  const vitals = {};
+  ["temp","hr","rr","sbp","dbp","spo2"].forEach((k) => { const v = num(k); if (v !== null) vitals[k] = v; });
+  return {
+    complaint: el("complaint").value.trim(),
+    symptoms,
+    history: splitList(el("history").value),
+    age: num("age"),
+    sex: el("sex").value || null,
+    vitals,
+  };
+}
+
+function fill(ex) {
+  const d = EXAMPLES[ex];
+  el("complaint").value = d.complaint;
+  el("age").value = d.age ?? ""; el("sex").value = d.sex ?? "";
+  selected.clear();
+  [...chipsEl.children].forEach((c) => c.classList.toggle("on", d.symptoms.includes(c.textContent)));
+  d.symptoms.filter((s) => !SYMPTOMS.includes(s)).forEach((s) => selected.add(s));
+  el("extra").value = d.symptoms.filter((s) => !SYMPTOMS.includes(s)).join(", ");
+  el("history").value = (d.history || []).join(", ");
+  ["temp","hr","rr","sbp","dbp","spo2"].forEach((k) => { el(k).value = d.vitals?.[k] ?? ""; });
+}
+
+document.querySelectorAll("[data-ex]").forEach((b) => {
+  b.onclick = () => fill(b.dataset.ex);
+});
+
+el("reset").onclick = () => {
+  selected.clear();
+  [...chipsEl.children].forEach((c) => c.classList.remove("on"));
+  ["complaint","age","extra","history","temp","hr","rr","sbp","dbp","spo2"].forEach((k) => { el(k).value = ""; });
+  el("sex").value = "";
+  el("result").innerHTML = '<div class="card"><div class="empty">填写左侧病例后点击「生成提示」，结果会显示在这里。</div></div>';
+};
+
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function render(r) {
+  const box = el("result");
+  if (r.status === "no_match") {
+    box.innerHTML = `<div class="card">
+      <div class="empty">${esc(r.message)}</div>
+      <div class="sect">通用问诊清单</div>
+      ${r.next_questions.map((q) => `<div class="q">${esc(q)}</div>`).join("")}
+      <div class="disclaimer">${esc(r.disclaimer)}</div></div>`;
+    return;
+  }
+  const flags = r.red_flags.length
+    ? r.red_flags.map((f) => `<div class="flag">
+        <div class="title">${esc(f.urgency)} · ${esc(f.label)}</div>
+        <div class="meta">依据：${esc(f.evidence.join("、"))}</div>
+        <div class="act">${esc(f.action)}</div></div>`).join("")
+    : `<div class="okline">本规则集未触发红旗征。仍需结合完整查体与生命体征动态观察。</div>`;
+
+  const dx = r.differentials.map((d) => `<div class="dx">
+      <div class="dx-head">
+        <span class="dx-name">${esc(d.name)}</span>
+        <span>
+          ${d.critical ? '<span class="badge crit">需优先排除</span> ' : ""}
+          <span class="badge">${esc(d.match_level)}</span>
+        </span>
+      </div>
+      <div class="bar"><i style="width:${Math.min(100, Math.round(d.match_ratio * 100))}%"></i></div>
+      <div class="kv">支持线索：<b>${d.supporting_findings.length ? esc(d.supporting_findings.join("、")) : "暂无"}</b>
+        ${d.against_findings.length ? `　反向线索：${esc(d.against_findings.join("、"))}` : ""}</div>
+      <div class="kv">待补充：${d.missing_findings.length ? esc(d.missing_findings.join("、")) : "关键特征已覆盖"}</div>
+      <ul class="exams">${d.recommended_exams.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+      ${d.caveat ? `<div class="kv">提示：${esc(d.caveat)}</div>` : ""}
+    </div>`).join("");
+
+  const exams = r.recommended_exams.map((g) => `<div class="examgroup">
+      <div class="lvl">${esc(g.level)}</div>
+      <ul class="exams">${g.items.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>`).join("");
+
+  box.innerHTML = `<div class="card">
+      ${r.narrative ? `<div class="narrative">${esc(r.narrative)}</div>` : ""}
+      <h2>红旗征筛查</h2>${flags}
+      <div class="sect">鉴别诊断提示 · 情景：${esc(r.matched_presentation.name)}</div>${dx}
+      <div class="sect">建议检查</div>${exams}
+      <div class="sect">建议补充的问诊信息</div>
+      ${r.next_questions.map((q) => `<div class="q">${esc(q)}</div>`).join("")}
+      <div class="disclaimer">${esc(r.disclaimer)}</div>
+    </div>`;
+}
+
+el("run").onclick = async () => {
+  const btn = el("run");
+  btn.disabled = true; btn.textContent = "推理中…";
+  try {
+    const resp = await fetch("/api/assess", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(collect()),
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    render(await resp.json());
+  } catch (e) {
+    el("result").innerHTML = `<div class="card"><div class="err">请求失败：${esc(e.message)}。请确认已启动 FastAPI 服务（默认 http://127.0.0.1:8000）。</div></div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = "生成提示";
+  }
+};
+</script>
+</body>
+</html>
