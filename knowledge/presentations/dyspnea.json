@@ -1,0 +1,102 @@
+{
+  "id": "dyspnea",
+  "name": "呼吸困难",
+  "entry_terms": [
+    {"term": "呼吸困难", "weight": 2},
+    {"term": "气促", "weight": 2},
+    {"term": "喘不上气", "weight": 2},
+    {"term": "憋气", "weight": 1.5},
+    {"term": "气短", "weight": 1.5}
+  ],
+  "red_flags": [
+    {
+      "label": "呼吸衰竭风险",
+      "urgency": "立即",
+      "terms": ["不能完整说话", "端坐呼吸", "三凹征", "发绿", "意识模糊"],
+      "vitals": [{"key": "spo2", "op": "<", "value": 90, "reason": "血氧饱和度<90%"}],
+      "action": "立即吸氧并评估是否需无创/有创通气，急查血气，通知上级医师。",
+      "exams": ["动脉血气", "床旁监护与血氧", "床旁胸片/肺超声"]
+    },
+    {
+      "label": "疑似急性心衰 / 肺水肿",
+      "urgency": "立即",
+      "terms": ["夜间阵发性呼吸困难", "端坐呼吸", "粉红色泡沫痰", "下肢水肿"],
+      "vitals": [],
+      "action": "半坐位、吸氧，急查BNP/NT-proBNP与心脏超声，请心内科评估。",
+      "exams": ["NT-proBNP/BNP", "床旁心脏超声", "胸片", "心电图"]
+    },
+    {
+      "label": "疑似肺栓塞 / 气胸",
+      "urgency": "立即",
+      "terms": ["突发呼吸困难", "一侧胸痛", "单侧下肢肿", "咯血"],
+      "vitals": [],
+      "action": "急查D-二聚体、肺动脉CTA或床旁肺超声，按流程处理。",
+      "exams": ["D-二聚体", "肺动脉CTA", "床旁肺超声", "下肢静脉超声"]
+    }
+  ],
+  "differentials": [
+    {
+      "id": "copd_asthma",
+      "name": "慢阻肺急性加重 / 哮喘发作",
+      "critical": true,
+      "support": [
+        {"term": "呼吸困难", "weight": 0.5, "any": ["呼吸困难", "气促", "憋气", "喘不上气", "气短"]},
+        {"term": "喘息", "weight": 1.5},
+        {"term": "哮鸣音", "weight": 1.5},
+        {"term": "既往哮喘", "weight": 1.5},
+        {"term": "吸烟史", "weight": 1},
+        {"term": "夜间加重", "weight": 0.8},
+        {"term": "咳嗽", "weight": 0.6}
+      ],
+      "against": [{"term": "粉红色泡沫痰", "weight": 1}],
+      "exams": ["动脉血气", "肺功能（缓解后）", "胸片", "支气管舒张试验（缓解期）"],
+      "caveat": "急性加重期以临床评估为主，肺功能不宜在急性期常规进行。"
+    },
+    {
+      "id": "heart_failure",
+      "name": "急性心力衰竭",
+      "critical": true,
+      "support": [
+        {"term": "呼吸困难", "weight": 0.5, "any": ["呼吸困难", "气促", "憋气", "喘不上气", "气短"]},
+        {"term": "端坐呼吸", "weight": 1.5},
+        {"term": "夜间阵发性呼吸困难", "weight": 1.5},
+        {"term": "下肢水肿", "weight": 1.2},
+        {"term": "颈静脉怒张", "weight": 1.2},
+        {"term": "粉红色泡沫痰", "weight": 1.5},
+        {"term": "高血压", "weight": 0.6}
+      ],
+      "against": [{"term": "哮鸣音", "weight": 0.5}],
+      "exams": ["NT-proBNP/BNP", "床旁心脏超声（EF、下腔静脉）", "胸片", "心电图"],
+      "caveat": "心衰与哮喘可并存（'心源性哮喘'），BNP与超声有助于鉴别。"
+    },
+    {
+      "id": "pneumonia_dyspnea",
+      "name": "肺炎",
+      "support": [
+        {"term": "呼吸困难", "weight": 0.5, "any": ["呼吸困难", "气促", "憋气", "喘不上气", "气短"]},
+        {"term": "发热", "weight": 1, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "咳嗽", "weight": 1},
+        {"term": "咳痰", "weight": 1},
+        {"term": "湿啰音", "weight": 1},
+        {"term": "胸痛", "weight": 0.8, "any": ["胸痛", "胸骨后", "心前区", "胸口疼", "胸闷"]}
+      ],
+      "against": [{"term": "夜间阵发性呼吸困难", "weight": 0.8}],
+      "exams": ["胸片/胸部CT", "血常规、CRP", "血气分析"],
+      "caveat": "重症肺炎可快速进展为ARDS，需动态评估氧合。"
+    },
+    {
+      "id": "anemia",
+      "name": "贫血相关呼吸困难",
+      "support": [
+        {"term": "呼吸困难", "weight": 0.5, "any": ["呼吸困难", "气促", "憋气", "喘不上气", "气短"]},
+        {"term": "乏力", "weight": 1},
+        {"term": "面色苍白", "weight": 1.2},
+        {"term": "心悸", "weight": 1},
+        {"term": "活动后气促", "weight": 1.2}
+      ],
+      "against": [{"term": "湿啰音", "weight": 0.6}],
+      "exams": ["血常规", "铁代谢/维生素B12、叶酸", "网织红细胞"],
+      "caveat": "慢性贫血可代偿良好，急性失血则风险更高。"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "id": "fever",
+  "name": "发热",
+  "entry_terms": [
+    {"term": "发热", "weight": 2},
+    {"term": "发烧", "weight": 2},
+    {"term": "高热", "weight": 1.8},
+    {"term": "体温升高", "weight": 1.5}
+  ],
+  "red_flags": [
+    {
+      "label": "疑似脓毒症",
+      "urgency": "立即",
+      "terms": ["意识改变", "血压低", "皮肤花斑", "尿量减少", "寒战"],
+      "vitals": [
+        {"key": "sbp", "op": "<", "value": 90, "reason": "收缩压<90mmHg符合脓毒症休克筛查条件"},
+        {"key": "hr", "op": ">", "value": 120, "reason": "心率>120次/分"},
+        {"key": "temp", "op": ">=", "value": 39.5, "reason": "超高热"}
+      ],
+      "action": "1小时内完成血培养并启动经验性抗感染（由医师决定），积极液体复苏，监测乳酸。",
+      "exams": ["血培养（抗生素前）", "乳酸", "血常规、CRP、降钙素原", "肝肾功能、凝血"]
+    },
+    {
+      "label": "疑似中枢神经系统感染",
+      "urgency": "立即",
+      "terms": ["颈抵抗", "剧烈头痛", "意识改变", "抽搐", "皮疹"],
+      "vitals": [],
+      "action": "急诊评估，必要时头颅影像后腰穿，尽早经验性抗感染。",
+      "exams": ["头颅CT/MRI", "腰穿及脑脊液", "血培养"]
+    }
+  ],
+  "differentials": [
+    {
+      "id": "respiratory_infection",
+      "name": "呼吸道感染（含肺炎）",
+      "support": [
+        {"term": "发热", "weight": 0.5, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "咳嗽", "weight": 1.2},
+        {"term": "咳痰", "weight": 1.2},
+        {"term": "咽痛", "weight": 1},
+        {"term": "湿啰音", "weight": 1.2},
+        {"term": "气促", "weight": 1}
+      ],
+      "against": [{"term": "尿频", "weight": 0.8}],
+      "exams": ["胸片或胸部CT", "血常规、CRP", "流感/新冠抗原（按季节）"],
+      "caveat": "老年患者肺部感染可无咳嗽、咳痰，仅表现为乏力或意识改变。"
+    },
+    {
+      "id": "urinary_infection",
+      "name": "泌尿系感染",
+      "support": [
+        {"term": "发热", "weight": 0.5, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "尿频", "weight": 1.5},
+        {"term": "尿急", "weight": 1.5},
+        {"term": "尿痛", "weight": 1.5},
+        {"term": "腰痛", "weight": 1},
+        {"term": "浑浊尿", "weight": 1.2}
+      ],
+      "against": [{"term": "咳痰", "weight": 0.8}],
+      "exams": ["尿常规", "尿培养", "泌尿系超声（疑梗阻时）", "血常规、CRP"],
+      "caveat": "留置导管患者尿培养阳性需结合症状判断定植与感染。"
+    },
+    {
+      "id": "viral",
+      "name": "病毒性感染（上呼吸道/流感等）",
+      "support": [
+        {"term": "发热", "weight": 0.5, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "咽痛", "weight": 1},
+        {"term": "肌肉酸痛", "weight": 1.2},
+        {"term": "乏力", "weight": 0.8},
+        {"term": "流涕", "weight": 1},
+        {"term": "畏寒", "weight": 0.8}
+      ],
+      "against": [{"term": "湿啰音", "weight": 1}],
+      "exams": ["流感/新冠抗原", "血常规", "CRP"],
+      "caveat": "持续高热超过3天或出现气促需重新评估是否合并细菌感染。"
+    },
+    {
+      "id": "biliary_infection",
+      "name": "胆道感染",
+      "support": [
+        {"term": "发热", "weight": 0.5, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "右上腹痛", "weight": 1.5},
+        {"term": "黄疸", "weight": 1.5},
+        {"term": "寒战", "weight": 1},
+        {"term": "Murphy征", "weight": 1}
+      ],
+      "against": [{"term": "尿痛", "weight": 0.8}],
+      "exams": ["肝功能、胆红素", "腹部超声", "血培养", "MRCP（按需）"],
+      "caveat": "Charcot三联征出现提示急性胆管炎，需紧急胆道引流评估。"
+    }
+  ]
+}

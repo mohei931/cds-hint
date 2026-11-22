@@ -1,0 +1,132 @@
+{
+  "id": "headache",
+  "name": "头痛",
+  "entry_terms": [
+    {"term": "头痛", "weight": 2},
+    {"term": "头疼", "weight": 2},
+    {"term": "头部胀痛", "weight": 1.5},
+    {"term": "偏头痛", "weight": 1.5}
+  ],
+  "red_flags": [
+    {
+      "label": "疑似蛛网膜下腔出血",
+      "urgency": "立即",
+      "terms": ["雷击样", "爆炸样", "一生最剧烈", "突发剧烈头痛", "颈部僵硬"],
+      "vitals": [],
+      "action": "立即头颅CT平扫；CT阴性而高度怀疑时行腰穿或CTA，请神经外科/神经内科会诊。",
+      "exams": ["头颅CT平扫（急诊）", "腰穿（CT阴性但高度怀疑时）", "头颅CTA"]
+    },
+    {
+      "label": "疑似颅内感染",
+      "urgency": "立即",
+      "terms": ["发热", "颈抵抗", "皮疹", "意识改变"],
+      "vitals": [{"key": "temp", "op": ">=", "value": 38.5, "reason": "发热伴头痛需警惕中枢感染"}],
+      "action": "在医师指导下尽早经验性抗感染，完善腰穿与头颅影像（注意颅内高压禁忌）。",
+      "exams": ["头颅CT/MRI", "腰穿及脑脊液检查", "血培养、血常规、CRP"],
+      "min_hits": 2
+    },
+    {
+      "label": "疑似颅内占位 / 颅高压",
+      "urgency": "尽快",
+      "terms": ["进行性加重", "晨起加重", "喷射性呕吐", "视乳头水肿", "肢体无力", "言语不清"],
+      "vitals": [],
+      "action": "完善头颅MRI增强，评估眼底，避免盲目腰穿。",
+      "exams": ["头颅MRI（增强）", "眼底检查", "神经系统查体"]
+    },
+    {
+      "label": "血压显著升高相关头痛",
+      "urgency": "立即",
+      "terms": ["血压很高"],
+      "vitals": [
+        {"key": "sbp", "op": ">=", "value": 180, "reason": "收缩压≥180mmHg"},
+        {"key": "dbp", "op": ">=", "value": 120, "reason": "舒张压≥120mmHg"}
+      ],
+      "action": "在医师指导下平稳降压，评估靶器官损害（眼底、心、肾、脑）。",
+      "exams": ["双侧血压复测", "心电图", "肾功能、尿常规", "眼底检查"]
+    }
+  ],
+  "differentials": [
+    {
+      "id": "secondary",
+      "name": "继发性头痛（需急查病因）",
+      "critical": true,
+      "support": [
+        {"term": "突发剧烈头痛", "weight": 2},
+        {"term": "雷击样", "weight": 1.5},
+        {"term": "一生最剧烈", "weight": 1.5},
+        {"term": "颈部僵硬", "weight": 1.2},
+        {"term": "喷射性呕吐", "weight": 1.2},
+        {"term": "进行性加重", "weight": 1}
+      ],
+      "against": [],
+      "exams": ["头颅CT平扫（急诊）", "腰穿（按指征）", "头颅CTA/MRI", "眼底检查"],
+      "caveat": "存在红旗征时按继发性头痛处理，优先完成影像与病因筛查。"
+    },
+    {
+      "id": "migraine",
+      "name": "偏头痛",
+      "support": [
+        {"term": "单侧搏动性", "weight": 1.5},
+        {"term": "搏动性", "weight": 1},
+        {"term": "畏光", "weight": 1.5},
+        {"term": "畏声", "weight": 1.5},
+        {"term": "恶心", "weight": 1},
+        {"term": "活动加重", "weight": 1},
+        {"term": "视觉先兆", "weight": 1.5}
+      ],
+      "against": [
+        {"term": "发热", "weight": 1.2, "any": ["发热", "发烧", "体温升高"]},
+        {"term": "进行性加重", "weight": 1}
+      ],
+      "exams": ["详细头痛日记与病史", "神经系统查体", "必要时头颅MRI排除继发原因"],
+      "caveat": "首次发作、性质改变或伴神经功能缺损者需影像学评估。"
+    },
+    {
+      "id": "tension",
+      "name": "紧张型头痛",
+      "support": [
+        {"term": "头痛", "weight": 0.5, "any": ["头痛", "头疼"]},
+        {"term": "双侧压迫", "weight": 1.5},
+        {"term": "紧箍感", "weight": 1.5},
+        {"term": "情绪紧张", "weight": 1},
+        {"term": "枕颈部肌肉紧张", "weight": 1},
+        {"term": "轻度头痛", "weight": 0.8}
+      ],
+      "against": [
+        {"term": "喷射性呕吐", "weight": 1},
+        {"term": "视乳头水肿", "weight": 1}
+      ],
+      "exams": ["病史与体格检查为主", "颈椎评估", "必要时头颅MRI"],
+      "caveat": "持续加重或伴全身症状时需排除继发性病因。"
+    },
+    {
+      "id": "cluster",
+      "name": "丛集性头痛",
+      "support": [
+        {"term": "头痛", "weight": 0.5, "any": ["头痛", "头疼"]},
+        {"term": "单侧眼眶周围", "weight": 1.5},
+        {"term": "流泪", "weight": 1.5},
+        {"term": "鼻塞", "weight": 1.2},
+        {"term": "夜间定时", "weight": 1.5},
+        {"term": "躁动不安", "weight": 1}
+      ],
+      "against": [{"term": "进行性加重", "weight": 0.8}],
+      "exams": ["神经科评估", "头颅MRI（首次发作时）", "氧疗与曲普坦类药物有效性评估（医师指导下）"],
+      "caveat": "首次发作需排除眶部、蝶窦及颅内病变。"
+    },
+    {
+      "id": "medication_overuse",
+      "name": "药物过量性头痛",
+      "support": [
+        {"term": "头痛", "weight": 0.5, "any": ["头痛", "头疼"]},
+        {"term": "频繁止痛药", "weight": 1.5},
+        {"term": "每月超过10天", "weight": 1.5},
+        {"term": "头痛逐渐加重", "weight": 1},
+        {"term": "停药后加重", "weight": 1.2}
+      ],
+      "against": [],
+      "exams": ["用药史清单（近3个月）", "头痛日记", "神经科门诊评估"],
+      "caveat": "需在医师指导下逐步停药，避免反跳性头痛。"
+    }
+  ]
+}
